@@ -25,7 +25,7 @@ def clean_document(path_index_html):
 if __name__ == "__main__":
     print "main begin"
     if not os.path.exists(base_dir):
-    	print base_dir + "not exists"
+		print base_dir + "not exists"
     	exit()
     count = 0
     for lists in os.listdir(base_dir):

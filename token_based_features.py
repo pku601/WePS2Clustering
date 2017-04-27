@@ -39,7 +39,6 @@ class PretreatmentUtil:
         stem_words = self.get_stem_words(clean_words)
 
         # 6.合并每一个句子的词成字符串
-        # str_line = self.words_to_str(stem_words)
         str_line = self.words_to_str(stem_words)
 
         return " ".join(str_line)
@@ -61,7 +60,7 @@ class PretreatmentUtil:
             clean_words += [[w.lower() for w in words if w.lower() not in stop_words]]
         return clean_words
 
-    def get_stem_words(self, clean_words_list): # 取主干，如果wordnet里面没有这个词，则不操作；去掉长度小于3的词
+    def get_stem_words(self, clean_words_list): # 取主干，如果wordnet里面没有这个词，则不操作；去掉在wordnet中长度小于3的词
         stem_words_list = []
         for words in clean_words_list:
             stem_words = []
@@ -69,10 +68,12 @@ class PretreatmentUtil:
                 stem_word = wn.morphy(word)
 
                 if stem_word:
+
                     if len(stem_word) < 3:
                         continue
                     stem_words.append(stem_word)
                 else:
+
                     stem_words.append(word)
             stem_words_list.append(stem_words)
         return stem_words_list
@@ -113,10 +114,11 @@ def get_clean_text(html_file):
         return util.get_content(text)
         # return text
 
-# The North Face - Athletes - Abby Watkins  Copyright 2004 Careers | About us | RD&D | Legal Notices & Privacy Policy | Site Map
-
 # 定义文件夹目录
 base_dir = "./weps2007_data_1.1/training/web_pages"
+
+# 定义token的文件夹目录
+token_dir = "./training"
 
 if __name__ == "__main__":
 
@@ -126,11 +128,16 @@ if __name__ == "__main__":
         exit(0)
 
     count = 0
-    for lists in os.listdir(base_dir):
+
+    for name in os.listdir(base_dir):
 
         # 人名
-        name = os.path.join(base_dir, lists)
-        path_raw = os.path.join(name, "raw")
+        name_dir = os.path.join(base_dir, name)
+        path_raw = os.path.join(name_dir, "raw")
+
+        # 生成文件，一个人名的所有rank都在一个文件里
+        tokens_file = os.path.join(token_dir, name + ".txt")
+        tokens_wf = open(tokens_file, "w")
 
         if not os.path.isdir(path_raw):
             continue
@@ -142,11 +149,21 @@ if __name__ == "__main__":
             if not os.path.isdir(rank_dir):
                 continue
 
-            print count
+            # 解析raw html文件
             path_index_html = os.path.join(rank_dir, "index.html")
-            all_text = get_clean_text(path_index_html)
-            print all_text
+            clean_text = get_clean_text(path_index_html)
 
-            count += 1
-            if count == 10:
-                exit()
+            # 生成多个tokens文件
+            # tokens_file = os.path.join(tokens_dir, rank + ".txt")
+            # tokens_wf = open(tokens_file, "w")
+            # tokens_wf.write(clean_text)
+
+            # 只生成一个文件
+            tokens_wf.write(rank + "\t" + clean_text + "\n")
+
+            # print clean_text
+
+            # count += 1
+            # if count == 10:
+            #     exit()
+        tokens_wf.close()

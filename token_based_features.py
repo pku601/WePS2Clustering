@@ -167,3 +167,5 @@ if __name__ == "__main__":
             # if count == 10:
             #     exit()
         tokens_wf.close()
+
+# python token_based_features.py

@@ -15,7 +15,7 @@ tfidf_dir = "./training/tfidf"
 def get_similarity(a, b):
     na = np.array(a)
     nb = np.array(b)
-    return np.vdot(na,nb)/(norm(na)*norm(nb))
+    return np.vdot(na, nb)/(norm(na)*norm(nb))
 
 
 # in: 文件
@@ -89,3 +89,4 @@ if __name__ == "__main__":
         # 存储
         pickle.dump({"rank_vec": rank_vec, "words_tfidf": words_tfidf}, open(os.path.join(tfidf_dir, name.split('.')[0]+".pkl"), "w"))
 
+# python tfidf_based_feature.py

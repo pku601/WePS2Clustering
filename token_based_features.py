@@ -90,7 +90,7 @@ class PretreatmentUtil:
 # out: text
 
 
-def get_clean_text(html_file):
+def get_clean_text(html_file, name):
     with open(html_file, 'r') as f:
 
         html = f.read()
@@ -110,8 +110,14 @@ def get_clean_text(html_file):
         # 去掉text中的注释
         text = re.sub("<!--.*-->", "", text, flags = re.S)
 
+        # 判断文本中是否含有这个名字，如果没有，discard=1;注意这里没有转装换成小写，直接匹配
+        is_discard = 1
+        if name in text:
+            is_discard = 0
+
         util = PretreatmentUtil()
-        return util.get_content(text)
+
+        return util.get_content(text), is_discard
         # return text
 
 # 定义文件夹目录
@@ -151,15 +157,15 @@ if __name__ == "__main__":
 
             # 解析raw html文件
             path_index_html = os.path.join(rank_dir, "index.html")
-            clean_text = get_clean_text(path_index_html)
+            clean_text, is_discard = get_clean_text(path_index_html, name.replace("_", " "))
 
             # 生成多个tokens文件
             # tokens_file = os.path.join(tokens_dir, rank + ".txt")
             # tokens_wf = open(tokens_file, "w")
             # tokens_wf.write(clean_text)
 
-            # 只生成一个文件
-            tokens_wf.write(rank + "\t" + clean_text + "\n")
+            # 只生成一个文件, rank id_discard clean_text
+            tokens_wf.write(rank + "\t" + str(is_discard) + "\t" + clean_text + "\n")
 
             # print clean_text
 

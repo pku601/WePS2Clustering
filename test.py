@@ -18,3 +18,4 @@ print words_tfidf[0:10]
 # b = [1, 1, 0]
 # print get_similarity(a,b)
 
+print sum(sum(words_tfidf, 1))

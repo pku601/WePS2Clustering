@@ -15,7 +15,10 @@ tfidf_dir = "./training/tfidf"
 def get_similarity(a, b):
     na = np.array(a)
     nb = np.array(b)
-    return np.vdot(na, nb)/(norm(na)*norm(nb))
+    if sum(na) == 0 or sum(nb) == 0:
+        return 1
+    else:
+        return 1 - np.vdot(na, nb)/(norm(na)*norm(nb))
 
 
 # in: 文件

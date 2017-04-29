@@ -147,9 +147,6 @@ if __name__ == "__main__":
 
     for name in os.listdir(base_dir):
 
-        if name != 'Sidney_Shorter':
-            continue
-
         # 人名
         name_dir = os.path.join(base_dir, name)
         path_raw = os.path.join(name_dir, "raw")

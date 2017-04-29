@@ -56,7 +56,7 @@ def get_word_frequency_vector(name_file):
             else:
                 is_discard_vec.append(rank)
 
-        # 将文本中的词语转换为词频矩阵
+        # 将文本中的词语转换为词频矩阵, 可以增加stop_words, max_df, min_df， 也可以使用LDA，LSA，LSI
         # Convert a collection of text documents to a matrix of token counts
         vectorizer = CountVectorizer()
 

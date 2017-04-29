@@ -18,7 +18,7 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec):
 
     # 生成点与点之间的距离矩阵,这里用的欧氏距离:
     # disMat = sch.distance.pdist(words_tfidf, 'cosine')       # 存在nan值，增加is_discard判断之后，不会出现nan值
-    disMat = sch.distance.pdist(words_tfidf, get_similarity)    # cosine: 1 - u*v/(norm(u)*norm(v)),
+    disMat = sch.distance.pdist(words_tfidf, 'cosine')    # cosine: 1 - u*v/(norm(u)*norm(v)),
 
     # print disMat.shape
     # print disMat
@@ -36,7 +36,7 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec):
 
     # 根据linkage matrix Z得到聚类结果:
     # 使用 fcluster 方程获取集群信息
-    cluster = sch.fcluster(Z, t=1.153)       # average:1.15,27   single:
+    cluster = sch.fcluster(Z, t=1.152)       # average:1.15,27   single:1.152
 
     # 合并rank和cluster, cluster:[rank1, rank2]
     cluster_rank = {}

@@ -11,7 +11,7 @@ output_dir = "./systemsDir/TEAM_A"
 def add_doc_node(cur_doc, cur_node, cur_column):  # 添加doc节点
     rank_list = cur_column.split(' ')
     for each_rank in rank_list:
-        print each_rank
+        # print each_rank
         each_rank = int(each_rank)
         doc_node = cur_doc.createElement('doc')
         doc_node.setAttribute('rank', str(each_rank))
@@ -33,9 +33,10 @@ def generate_xml(person_name, file_path):  # 生成XML文件
             first_column = contents[0]
             second_column = contents[1]
             if first_column == "discard":
-                discarded_node = doc.createElement('discarded')
-                clustering.appendChild(discarded_node)
-                add_doc_node(doc, discarded_node, second_column)
+                if second_column != "":
+                    discarded_node = doc.createElement('discarded')
+                    clustering.appendChild(discarded_node)
+                    add_doc_node(doc, discarded_node, second_column)
             else:
                 entity_node = doc.createElement('entity')
                 entity_node.setAttribute('id', first_column)
@@ -56,10 +57,7 @@ def traverse_files():
             generate_xml(each_file[:-4], os.path.join(cluster_dir, each_file))
 
 if __name__ == "__main__":
-    print "begin convert  ==="
 
     traverse_files()  # 遍历文件
-
-    print "conversion end ==="
 
 # python format_conversion.py

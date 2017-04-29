@@ -190,11 +190,6 @@ if __name__ == "__main__":
             # 只生成一个文件, rank id_discard clean_text
             tokens_wf.write(rank + "\t" + str(is_discard) + "\t" + clean_text + "\n")
 
-            # print clean_text
-
-            # count += 1
-            # if count == 10:
-            #     exit()
         tokens_wf.close()
         break
 

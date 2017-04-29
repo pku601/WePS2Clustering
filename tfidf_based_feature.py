@@ -15,22 +15,29 @@ tfidf_dir = "./training/tfidf"
 def get_similarity(a, b):
     na = np.array(a)
     nb = np.array(b)
-    if sum(na) == 0 or sum(nb) == 0:
+    suma = sum(na)
+    sumb = sum(nb)
+    if  suma== 0 and sumb == 0:
+        return 0
+    elif suma == 0 or sumb == 0:
         return 1
     else:
         return 1 - np.vdot(na, nb)/(norm(na)*norm(nb))
 
 
-# in: 文件
+# in: 文件: rank, is_discard, tokens
 # out: 每个人名对应的所有网页的词频向量
 
 
 def get_word_frequency_vector(name_file):
 
-    # rank向量
+    # 只记录is_discard=0的文本的rank向量
     rank_vec = []
 
-    # 组合所有文件的words成语料
+    # 只记录is_discard=1的文本的rank向量
+    is_discard_vec = []
+
+    # 组合所有is_discard=0的文件的words成语料
     corpus = []
 
     with open(name_file, "r") as name_read_file:
@@ -38,12 +45,16 @@ def get_word_frequency_vector(name_file):
         for line in name_read_file:
             contents = line.strip('\n').split('\t')
             rank = contents[0]
-            if len(contents) == 2:
-                words = contents[1]
+            is_discard = contents[1]
+            if len(contents) == 3:
+                words = contents[2]
             else:
-                words = []
-            corpus.append(words)
-            rank_vec.append(rank)
+                words = ''
+            if is_discard == '0':
+                corpus.append(words)
+                rank_vec.append(rank)
+            else:
+                is_discard_vec.append(rank)
 
         # 将文本中的词语转换为词频矩阵
         # Convert a collection of text documents to a matrix of token counts
@@ -53,7 +64,7 @@ def get_word_frequency_vector(name_file):
         # Learn the vocabulary dictionary and return term-document matrix.
         words_count = vectorizer.fit_transform(corpus)
 
-    return rank_vec, words_count.toarray()
+    return rank_vec, words_count.toarray(), is_discard_vec
 
 # 计算文本的TF_IDF值 tf * log(n/nt)
 # 改进：采用拉普拉斯平滑 (1+log(tf)/(1+log(avg(tf))) * log(n/nt)
@@ -87,12 +98,13 @@ if __name__ == "__main__":
             continue
 
         # 获取词频向量
-        rank_vec, words_vec = get_word_frequency_vector(name_file)
+        rank_vec, words_vec, is_discard_vec = get_word_frequency_vector(name_file)
 
         # 计算tf-idf值 元素a[i][j]表示j词在第i个文本中的tf-idf权重
         words_tfidf = get_tfidf_vector(words_vec)
 
         # 存储
-        pickle.dump({"rank_vec": rank_vec, "words_tfidf": words_tfidf}, open(os.path.join(tfidf_dir, name.split('.')[0]+".pkl"), "w"))
+        pickle.dump({"rank_vec": rank_vec, "words_tfidf": words_tfidf, "is_discard_vec":is_discard_vec}, open(os.path.join(tfidf_dir, name.split('.')[0]+".pkl"), "w"))
 
+        break
 # python tfidf_based_feature.py

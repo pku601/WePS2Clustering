@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "=============== begin ================="
+
 # 对文本进行预处理, 得到tokens
 # python token_based_features.py
 
@@ -8,3 +10,11 @@
 
 # 层次聚类（层次聚类算法的主要优点在于无需事先知道最终所需集群数量）
 # python hierarchy_clustering.py
+
+# 格式转换为评测需要的XML格式
+# python format_conversion.py
+
+# evaluation
+java -cp wepsEvaluation.jar es.nlp.uned.weps.evaluation.SystemScorer ./keysDir/ ./systemsDir/ ./outputDir -ALLMEASURES -AllInOne -OneInOne -Combined -average
+
+echo "=============== end   ================="

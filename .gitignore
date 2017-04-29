@@ -4,3 +4,5 @@ weps2007_data_1.1
 training/
 *.pyc
 *.png
+outputDir/
+log.txt

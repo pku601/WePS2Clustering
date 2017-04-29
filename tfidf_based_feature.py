@@ -106,5 +106,6 @@ if __name__ == "__main__":
         # 存储
         pickle.dump({"rank_vec": rank_vec, "words_tfidf": words_tfidf, "is_discard_vec":is_discard_vec}, open(os.path.join(tfidf_dir, name.split('.')[0]+".pkl"), "w"))
 
-        break
+        # break
+
 # python tfidf_based_feature.py

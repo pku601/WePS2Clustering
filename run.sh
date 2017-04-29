@@ -2,11 +2,13 @@
 
 echo "=============== begin ================="
 
-# 对文本进行预处理, 得到tokens
+start=$(date +%s)
+
+# 对文本进行预处理, 得到tokens  all: 728s
 # python token_based_features.py
 
-# 求每个token的tf-idf
-# python tfidf_based_feature.py
+# 求每个token的tf-idf  all: s
+python tfidf_based_feature.py
 
 # 层次聚类（层次聚类算法的主要优点在于无需事先知道最终所需集群数量）
 # python hierarchy_clustering.py
@@ -15,6 +17,10 @@ echo "=============== begin ================="
 # python format_conversion.py
 
 # evaluation
-java -cp wepsEvaluation.jar es.nlp.uned.weps.evaluation.SystemScorer ./keysDir/ ./systemsDir/ ./outputDir -ALLMEASURES -AllInOne -OneInOne -Combined -average
+# java -cp wepsEvaluation.jar es.nlp.uned.weps.evaluation.SystemScorer ./keysDir/ ./systemsDir/ ./outputDir -ALLMEASURES -AllInOne -OneInOne -Combined -average
+
+end=$(date +%s)
+time=$(( $end - $start ))
+echo $time
 
 echo "=============== end   ================="

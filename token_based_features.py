@@ -191,6 +191,6 @@ if __name__ == "__main__":
             tokens_wf.write(rank + "\t" + str(is_discard) + "\t" + clean_text + "\n")
 
         tokens_wf.close()
-        break
+        # break
 
 # python token_based_features.py

@@ -1,8 +1,8 @@
 weps-2-test
 weps2007_data_1.1
 .idea
-training/
 *.pyc
 *.png
 outputDir/
 log.txt
+training/tfidf/

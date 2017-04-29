@@ -11,6 +11,7 @@ output_dir = "./systemsDir/TEAM_A"
 def add_doc_node(cur_doc, cur_node, cur_column):  # 添加doc节点
     rank_list = cur_column.split(' ')
     for each_rank in rank_list:
+        print each_rank
         each_rank = int(each_rank)
         doc_node = cur_doc.createElement('doc')
         doc_node.setAttribute('rank', str(each_rank))

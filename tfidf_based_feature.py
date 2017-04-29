@@ -91,6 +91,7 @@ if __name__ == "__main__":
 
     for name in names:
 
+        print name
         # 打开每个人名的文件
         name_file = os.path.join(train_dir, name)
 

@@ -18,10 +18,6 @@
 		<doc rank="97"/>
 	</entity>
 	<entity id="5">
-		<doc rank="52"/>
-		<doc rank="99"/>
-	</entity>
-	<entity id="6">
 		<doc rank="1"/>
 		<doc rank="2"/>
 		<doc rank="3"/>
@@ -108,6 +104,10 @@
 		<doc rank="122"/>
 		<doc rank="123"/>
 	</entity>
+	<entity id="6">
+		<doc rank="52"/>
+		<doc rank="99"/>
+	</entity>
 	<entity id="7">
 		<doc rank="6"/>
 	</entity>
@@ -115,51 +115,54 @@
 		<doc rank="27"/>
 	</entity>
 	<entity id="9">
-		<doc rank="79"/>
+		<doc rank="95"/>
 	</entity>
 	<entity id="10">
-		<doc rank="4"/>
+		<doc rank="79"/>
 	</entity>
 	<entity id="11">
-		<doc rank="70"/>
+		<doc rank="4"/>
 	</entity>
 	<entity id="12">
-		<doc rank="35"/>
+		<doc rank="70"/>
 	</entity>
 	<entity id="13">
-		<doc rank="89"/>
+		<doc rank="35"/>
 	</entity>
 	<entity id="14">
-		<doc rank="30"/>
+		<doc rank="89"/>
 	</entity>
 	<entity id="15">
-		<doc rank="21"/>
+		<doc rank="30"/>
 	</entity>
 	<entity id="16">
-		<doc rank="81"/>
+		<doc rank="21"/>
 	</entity>
 	<entity id="17">
-		<doc rank="39"/>
+		<doc rank="81"/>
 	</entity>
 	<entity id="18">
-		<doc rank="101"/>
+		<doc rank="39"/>
 	</entity>
 	<entity id="19">
-		<doc rank="72"/>
+		<doc rank="101"/>
 	</entity>
 	<entity id="20">
-		<doc rank="68"/>
+		<doc rank="72"/>
 	</entity>
 	<entity id="21">
-		<doc rank="91"/>
+		<doc rank="68"/>
 	</entity>
 	<entity id="22">
-		<doc rank="51"/>
+		<doc rank="91"/>
 	</entity>
 	<entity id="23">
-		<doc rank="53"/>
+		<doc rank="51"/>
 	</entity>
 	<entity id="24">
+		<doc rank="53"/>
+	</entity>
+	<entity id="25">
 		<doc rank="100"/>
 	</entity>
 	<discarded>
@@ -169,7 +172,6 @@
 		<doc rank="38"/>
 		<doc rank="61"/>
 		<doc rank="65"/>
-		<doc rank="95"/>
 		<doc rank="103"/>
 		<doc rank="110"/>
 		<doc rank="121"/>

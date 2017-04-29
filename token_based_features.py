@@ -105,7 +105,7 @@ def get_clean_text(html_file, name):
         for element in soup.findAll('script'):
             element.extract()
 
-        # 先获取html中的所有text，然后去掉空白符，注释
+        # 先获取html中的所有text，然后去掉空白符，注释，人名
         clean_strings = []
         for string in soup.stripped_strings:
             clean_string = (re.sub("\xa0+", " ", string, re.S))
@@ -127,7 +127,7 @@ def get_clean_text(html_file, name):
 
         util = PretreatmentUtil()
 
-        return util.get_content(text), name.lower()
+        return util.get_content(text), util.get_content(name)
         # return text
 
 # 定义文件夹目录
@@ -146,6 +146,9 @@ if __name__ == "__main__":
     count = 0
 
     for name in os.listdir(base_dir):
+
+        if name != 'Sidney_Shorter':
+            continue
 
         # 人名
         name_dir = os.path.join(base_dir, name)
@@ -174,18 +177,22 @@ if __name__ == "__main__":
             # tokens_wf = open(tokens_file, "w")
             # tokens_wf.write(clean_text)
 
-            # 判断是否含有人名
+
+            # 判断是否含有人名，如果有则去掉人名，并且置is_discard=1
             name_flag = [0,0]
             name_list = name_text.split(" ")
             is_discard = 1
             clean_words = clean_text.split(" ")
             for word in clean_words:
                 for idx in range(len(name_list)):
-                    if word == name_list[idx]:
+                    if name_list[idx] == word:
                         name_flag[idx] = 1
+                        clean_words.remove(name_list[idx])
 
+            clean_text = " ".join(clean_words)
             if name_flag[0] == 1 and name_flag[1] == 1:
                 is_discard = 0
+
 
             # 只生成一个文件, rank id_discard clean_text
             tokens_wf.write(rank + "\t" + str(is_discard) + "\t" + clean_text + "\n")

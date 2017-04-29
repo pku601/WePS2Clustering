@@ -5,4 +5,4 @@ weps2007_data_1.1
 *.png
 outputDir/
 log.txt
-training/tfidf/
+training/

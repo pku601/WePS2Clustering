@@ -73,7 +73,8 @@ class PretreatmentUtil:
                         continue
                     stem_words.append(stem_word)
                 else:
-
+                    if len(word) < 3:           # 增加了一个判断不在wordnet中的词的情况，过滤掉长度小于3的词
+                        continue
                     stem_words.append(word)
             stem_words_list.append(stem_words)
         return stem_words_list
@@ -104,20 +105,29 @@ def get_clean_text(html_file, name):
         for element in soup.findAll('script'):
             element.extract()
 
-        # 获取去空白符之后的字符串
-        text = u" ".join(soup.stripped_strings)
+        # 先获取html中的所有text，然后去掉空白符，注释
+        clean_strings = []
+        for string in soup.stripped_strings:
+            clean_string = (re.sub("\xa0+", " ", string, re.S))
+            clean_string = (re.sub("\n+", " ", clean_string, re.S))
+            clean_string = (re.sub("\s+", " ", clean_string, re.S))
+            clean_string = (re.sub("<!--.*-->", "", clean_string, flags = re.S))
+            if clean_string:
+                clean_strings.append(clean_string)
+
+        text = u" ".join(clean_strings)
 
         # 去掉text中的注释
-        text = re.sub("<!--.*-->", "", text, flags = re.S)
+        # text = re.sub("<!--.*-->", "", text, flags = re.S)
 
-        # 判断文本中是否含有这个名字，如果没有，discard=1;注意这里没有转装换成小写，直接匹配
-        is_discard = 1
-        if name in text:
-            is_discard = 0
+        # 去掉空格, html中的&nbsp;&quot;
+        # text = (re.sub("\xa0+", " ", text, re.S))
+        # text = (re.sub("\n+", " ", text, re.S))
+        # text = (re.sub("\s+", " ", text, re.S))
 
         util = PretreatmentUtil()
 
-        return util.get_content(text), is_discard
+        return util.get_content(text), name.lower()
         # return text
 
 # 定义文件夹目录
@@ -157,12 +167,25 @@ if __name__ == "__main__":
 
             # 解析raw html文件
             path_index_html = os.path.join(rank_dir, "index.html")
-            clean_text, is_discard = get_clean_text(path_index_html, name.replace("_", " "))
+            clean_text, name_text = get_clean_text(path_index_html, name.replace("_", " "))
 
             # 生成多个tokens文件
             # tokens_file = os.path.join(tokens_dir, rank + ".txt")
             # tokens_wf = open(tokens_file, "w")
             # tokens_wf.write(clean_text)
+
+            # 判断是否含有人名
+            name_flag = [0,0]
+            name_list = name_text.split(" ")
+            is_discard = 1
+            clean_words = clean_text.split(" ")
+            for word in clean_words:
+                for idx in range(len(name_list)):
+                    if word == name_list[idx]:
+                        name_flag[idx] = 1
+
+            if name_flag[0] == 1 and name_flag[1] == 1:
+                is_discard = 0
 
             # 只生成一个文件, rank id_discard clean_text
             tokens_wf.write(rank + "\t" + str(is_discard) + "\t" + clean_text + "\n")
@@ -173,5 +196,6 @@ if __name__ == "__main__":
             # if count == 10:
             #     exit()
         tokens_wf.close()
+        break
 
 # python token_based_features.py

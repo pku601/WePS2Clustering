@@ -1,11 +1,8 @@
 #! usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import scipy
 import os
 import scipy.cluster.hierarchy as sch
-from scipy.cluster.vq import vq,kmeans,whiten
-import numpy as np
 import matplotlib.pylab as plt
 import cPickle as pickle
 from tfidf_based_feature import get_similarity
@@ -16,41 +13,44 @@ cluster_dir = './training/cluster'
 
 def hierarchy_clustering(name, rank_vec, words_tfidf):
 
-    #生成待聚类的数据点,这里生成了20个点,每个点4维:
+    # 生成待聚类的数据点,这里生成了20个点,每个点4维:
     # points=scipy.randn(20,4)
 
-    #生成点与点之间的距离矩阵,这里用的欧氏距离:
+    # 生成点与点之间的距离矩阵,这里用的欧氏距离:
     # disMat = sch.distance.pdist(words_tfidf, 'cosine')       # 存在nan值
     disMat = sch.distance.pdist(words_tfidf, get_similarity)    # cosine: 1 - u*v/(norm(u)*norm(v))
 
     # print disMat.shape
     # print disMat
 
-    #进行层次聚类:
-    Z=sch.linkage(disMat,method='average')
+    # 进行层次聚类:
+    # method: ward single complete average
+    Z = sch.linkage(disMat, method='average')
 
     # print Z.shape
     # print Z
 
-    #将层级聚类结果以树状图表示出来并保存为plot_dendrogram.png
-    P=sch.dendrogram(Z)
+    # 将层级聚类结果以树状图表示出来并保存为plot_dendrogram.png
+    P = sch.dendrogram(Z)
+    plt.title('Hierarchical Clustering Dendrogram')
     plt.savefig(os.path.join(cluster_dir, name + '.png'))
 
-    #根据linkage matrix Z得到聚类结果:
+    # 根据linkage matrix Z得到聚类结果:
+    # 使用 fcluster 方程获取集群信息
     cluster = sch.fcluster(Z, t=0.1)
 
-    #合并rank和cluster, cluster:[rank1, rank2]
+    # 合并rank和cluster, cluster:[rank1, rank2]
     cluster_rank = {}
     for rank in range(len(rank_vec)):
         cluster_label = cluster[rank]
         # print rank, rank_vec[rank], cluster_label
-        if  cluster_label not in cluster_rank:
+        if cluster_label not in cluster_rank:
             cluster_rank[cluster_label] = []
         cluster_rank[cluster_label].append(rank_vec[rank])
 
     pickle.dump(cluster_rank, open(os.path.join(cluster_dir, name+".pkl"), "w"))
 
-    #写文件
+    # 写文件
     cluster_file = os.path.join(cluster_dir, name+'.txt')
     with open(cluster_file, "w") as wf:
         for cluster_label, rank_list in cluster_rank.iteritems():
@@ -83,3 +83,5 @@ if __name__ == "__main__":
 
         hierarchy_clustering(name.split('.')[0], rank_vec, words_tfidf)
         break
+
+# python hierarchy_clustering.py

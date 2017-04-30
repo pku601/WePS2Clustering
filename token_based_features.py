@@ -147,6 +147,8 @@ if __name__ == "__main__":
 
     for name in os.listdir(base_dir):
 
+        # print name
+
         # 人名
         name_dir = os.path.join(base_dir, name)
         path_raw = os.path.join(name_dir, "raw")
@@ -169,24 +171,28 @@ if __name__ == "__main__":
             path_index_html = os.path.join(rank_dir, "index.html")
             clean_text, name_text = get_clean_text(path_index_html, name.replace("_", " "))
 
+            # print name_text
             # 生成多个tokens文件
             # tokens_file = os.path.join(tokens_dir, rank + ".txt")
             # tokens_wf = open(tokens_file, "w")
             # tokens_wf.write(clean_text)
-
 
             # 判断是否含有人名，如果有则去掉人名，并且置is_discard=1
             name_flag = [0,0]
             name_list = name_text.split(" ")
             is_discard = 1
             clean_words = clean_text.split(" ")
+            leave_words = []            # 去掉人名之后的tokens
             for word in clean_words:
+                fg = 0
                 for idx in range(len(name_list)):
                     if name_list[idx] == word:
                         name_flag[idx] = 1
-                        clean_words.remove(name_list[idx])
+                        fg = 1
+                if fg == 0:
+                    leave_words.append(word)
 
-            clean_text = " ".join(clean_words)
+            clean_text = " ".join(leave_words)
             if name_flag[0] == 1 and name_flag[1] == 1:
                 is_discard = 0
 

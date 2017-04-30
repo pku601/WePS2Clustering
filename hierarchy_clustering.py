@@ -86,6 +86,5 @@ if __name__ == "__main__":
         is_discard_vec = load_dict['is_discard_vec']
 
         hierarchy_clustering(name.split('.')[0], rank_vec, words_tfidf, is_discard_vec)
-        # break
 
 # python hierarchy_clustering.py

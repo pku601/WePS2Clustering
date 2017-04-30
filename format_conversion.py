@@ -56,7 +56,14 @@ def traverse_files():
         if each_file.endswith(suffix):  # 后缀要是.txt
             generate_xml(each_file[:-4], os.path.join(cluster_dir, each_file))
 
+
+def ensure_dir(mul_dir):
+    if not os.path.exists(mul_dir):
+        os.makedirs(mul_dir)
+
 if __name__ == "__main__":
+
+    ensure_dir(output_dir)  # 目录不存在则创建
 
     traverse_files()  # 遍历文件
 

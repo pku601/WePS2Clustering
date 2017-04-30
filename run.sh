@@ -8,6 +8,9 @@ start=$(date +%s)
 echo "=============== token ================="
 # python token_based_features.py
 
+# 对文本进行预处理, 得到title、url、snippet
+# python title_url_snippet.py
+
 # 求每个token的tf-idf  all: 1s
 echo "=============== tfidf ================="
 # python tfidf_based_feature.py
@@ -18,7 +21,7 @@ echo "=============== cluster ==============="
 
 # 格式转换为评测需要的XML格式
 echo "=============== convert ==============="
-python format_conversion.py
+# python format_conversion.py
 
 # evaluation
 echo "=============== evaluation ============"

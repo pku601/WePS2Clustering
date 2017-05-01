@@ -105,6 +105,10 @@ def get_clean_text(html_file, name):
         for element in soup.findAll('script'):
             element.extract()
 
+        # 去掉style节点
+        for element in soup.findAll('style'):
+            element.extract()
+
         # 先获取html中的所有text，然后去掉空白符，注释，人名
         clean_strings = []
         for string in soup.stripped_strings:
@@ -126,15 +130,36 @@ def get_clean_text(html_file, name):
         # text = (re.sub("\s+", " ", text, re.S))
 
         util = PretreatmentUtil()
-
         return util.get_content(text), util.get_content(name)
-        # return text
 
-# 定义文件夹目录
+
+def get_clean_title_snippet(file_path):
+    title_snippet_dict = {}
+    file = open(file_path, "r")
+    for line in file:
+        contents = line.strip('\n').split('\t')
+        rank = int(contents[0])
+        title = contents[1]
+        url = contents[2]
+        snippet = contents[3]
+        text = ''
+        if title:
+            text = text + ' ' + title
+        if snippet:
+            text = text + ' ' + snippet
+        util = PretreatmentUtil()
+        title_snippet_dict[rank] = util.get_content(text)
+    return title_snippet_dict
+
+# 定义文件夹目录,包含html文件
 base_dir = "./weps2007_data_1.1/training/web_pages"
+
+# 定义title，url，snippet文件夹目录
+title_url_snippet_dir = "./training/title_url_snippet"
 
 # 定义token的文件夹目录
 token_dir = "./training"
+
 
 if __name__ == "__main__":
 
@@ -160,6 +185,10 @@ if __name__ == "__main__":
         if not os.path.isdir(path_raw):
             continue
 
+        # 获取真个人名的所有rank的title，url，snippet
+        title_url_snippet_file = os.path.join(title_url_snippet_dir, name+".txt")
+        title_snippet_dict = get_clean_title_snippet(title_url_snippet_file)
+
         for rank in os.listdir(path_raw):
 
             rank_dir = os.path.join(path_raw, rank)
@@ -171,13 +200,16 @@ if __name__ == "__main__":
             path_index_html = os.path.join(rank_dir, "index.html")
             clean_text, name_text = get_clean_text(path_index_html, name.replace("_", " "))
 
+            # 获取title，snippet的信息
+            clean_text = clean_text + " " + title_snippet_dict[int(rank)]
+
             # print name_text
             # 生成多个tokens文件
             # tokens_file = os.path.join(tokens_dir, rank + ".txt")
             # tokens_wf = open(tokens_file, "w")
             # tokens_wf.write(clean_text)
 
-            # 判断是否含有人名，如果有则去掉人名，并且置is_discard=1
+            # 判断是否含有人名，如果有则去掉人名，并且置is_discard=1；
             name_flag = [0,0]
             name_list = name_text.split(" ")
             is_discard = 1
@@ -196,6 +228,9 @@ if __name__ == "__main__":
             if name_flag[0] == 1 and name_flag[1] == 1:
                 is_discard = 0
 
+            # tokens小于一定数量(10)，设置is_discard=1
+            if len(leave_words) < 1:
+                is_discard = 1
 
             # 只生成一个文件, rank id_discard clean_text
             tokens_wf.write(rank + "\t" + str(is_discard) + "\t" + clean_text + "\n")

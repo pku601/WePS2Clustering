@@ -31,9 +31,9 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec):
     # print Z
 
     # 将层级聚类结果以树状图表示出来并保存为plot_dendrogram.png
-    P = sch.dendrogram(Z)
-    plt.title('Hierarchical Clustering Dendrogram')
-    plt.savefig(os.path.join(cluster_dir, name + '.png'))
+    # P = sch.dendrogram(Z)
+    # plt.title('Hierarchical Clustering Dendrogram')
+    # plt.savefig(os.path.join(cluster_dir, name + '.png'))
 
     # 根据linkage matrix Z得到聚类结果:
     # 使用 fcluster 方程获取集群信息
@@ -51,7 +51,8 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec):
     # 增加discard的类
     cluster_rank['discard'] = is_discard_vec
 
-    pickle.dump(cluster_rank, open(os.path.join(cluster_dir, name+".pkl"), "w"))
+    # 生成pickle文件
+    # pickle.dump(cluster_rank, open(os.path.join(cluster_dir, name+".pkl"), "w"))
 
     # 写文件
     cluster_file = os.path.join(cluster_dir, name+'.txt')
@@ -74,6 +75,9 @@ if __name__ == "__main__":
 
     name_files = os.listdir(tfidf_dir)
     for name in name_files:
+
+        # if name != 'Alexander_Macomb.pkl':
+        #     continue
 
         file_path = os.path.join(tfidf_dir, name)
         if not os.path.isfile(file_path):

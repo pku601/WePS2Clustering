@@ -66,14 +66,14 @@ def get_word_frequency_vector(name_file):
 
     return rank_vec, words_count.toarray(), is_discard_vec
 
-# 计算文本的TF_IDF值 tf * log(n/nt)
+# 计算文本的TF_IDF值 (1+log(tf)) * (1+log(n/nt)) + norm
 # 改进：采用拉普拉斯平滑 (1+log(tf)/(1+log(avg(tf))) * log(n/nt)
 
 
 def get_tfidf_vector(words_count):
 
     # Transform a count matrix to a normalized tf or tf-idf representation
-    transformer = TfidfTransformer()
+    transformer = TfidfTransformer(norm=None, use_idf=True, smooth_idf=False, sublinear_tf=True)
 
     # 将词频矩阵X统计成TF-IDF值
     tfidf = transformer.fit_transform(words_count)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
         if os.path.isdir(name_file):
             continue
 
-        # 获取词频向量
+        # 获取文本中的词频向量
         rank_vec, words_vec, is_discard_vec = get_word_frequency_vector(name_file)
 
         # 计算tf-idf值 元素a[i][j]表示j词在第i个文本中的tf-idf权重

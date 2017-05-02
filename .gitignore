@@ -7,3 +7,6 @@ outputDir/
 log.txt
 training/
 systemsDir/
+test/cluster
+test/tfidf
+title_url_snippet

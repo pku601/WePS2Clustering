@@ -22,7 +22,7 @@ def add_doc_node(cur_doc, cur_node, cur_column):  # 添加doc节点
         cur_node.appendChild(doc_node)
 
 
-def generate_xml(person_name, file_path, data_output_dir):  # 生成XML文件
+def generate_xml(person_name, file_path, data_output_dir, stage):  # 生成XML文件
 
     doc = Document()  # 创建DOM文档对象
     clustering = doc.createElement('clustering')  # 创建根元素
@@ -48,17 +48,20 @@ def generate_xml(person_name, file_path, data_output_dir):  # 生成XML文件
                 add_doc_node(doc, entity_node, second_column)
 
     # 保存文档
-    f = open(os.path.join(data_output_dir, person_name + ".clust.xml"), 'w')
+    if stage == 'train':
+        f = open(os.path.join(data_output_dir, person_name + ".clust.xml"), 'w')
+    else:
+        f = open(os.path.join(data_output_dir, person_name + ".xml"), 'w')
     f.write(doc.toprettyxml(encoding='utf-8'))
     f.close()
 
 
-def traverse_files(data_cluster_dir, data_output_dir):
+def traverse_files(data_cluster_dir, data_output_dir, stage):
     name_files = os.listdir(data_cluster_dir)
     suffix = ".txt"
     for each_file in name_files:
         if each_file.endswith(suffix):  # 后缀要是.txt
-            generate_xml(each_file[:-4], os.path.join(data_cluster_dir, each_file), data_output_dir)
+            generate_xml(each_file[:-4], os.path.join(data_cluster_dir, each_file), data_output_dir, stage)
 
 
 def ensure_dir(mul_dir):
@@ -80,7 +83,7 @@ if __name__ == "__main__":
         data_output_dir = test_output_dir
 
     ensure_dir(data_output_dir)  # 目录不存在则创建
-    traverse_files(data_cluster_dir, data_output_dir)  # 遍历文件
+    traverse_files(data_cluster_dir, data_output_dir, stage)  # 遍历文件
 
 # python format_conversion.py train
 

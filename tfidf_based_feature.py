@@ -78,6 +78,7 @@ def get_tfidf_vector(words_count):
 
     # Transform a count matrix to a normalized tf or tf-idf representation
     transformer = TfidfTransformer(norm=None, use_idf=True, smooth_idf=False, sublinear_tf=True)
+    # transformer = TfidfTransformer(norm=True, use_idf=True, smooth_idf=True, sublinear_tf=True)
 
     # 将词频矩阵X统计成TF-IDF值
     tfidf = transformer.fit_transform(words_count)

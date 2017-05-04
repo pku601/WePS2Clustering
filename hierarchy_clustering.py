@@ -39,7 +39,7 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
     # plt.savefig(os.path.join(cluster_dir, name + '.png'))
 
     # 根据linkage matrix Z得到聚类结果:
-    # 使用 fcluster 方程获取集群信息 test 1.15:0.68
+    # 使用 fcluster 方程获取集群信息 test (+1)1.15:0.68   (+0)  1.15:0.7
     cluster = sch.fcluster(Z, t=1.15)       # average:1.15,27   single:1.152
 
     # 合并rank和cluster, cluster:[rank1, rank2]

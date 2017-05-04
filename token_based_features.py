@@ -13,6 +13,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 # 对文本进行预处理
 
 
@@ -28,7 +29,9 @@ class PretreatmentUtil:
         sent = sent_tokenizer.tokenize(content)
 
         # 2.去掉数字标点和非字母字符
-        clean_lines = [self.get_clean_lines(line.encode("utf-8")) for line in sent]
+        # clean_lines = [self.get_clean_lines(line.encode("utf-8")) for line in sent]
+        clean_lines = [self.get_clean_line_by_sub(line.encode("utf-8")) for line in sent]
+
 
         # 3.nltk.word_tokenize分词
         words_list = [self.get_word_tokener(cl) for cl in clean_lines]
@@ -43,6 +46,12 @@ class PretreatmentUtil:
         str_line = self.words_to_str(stem_words)
 
         return " ".join(str_line)
+
+    def get_clean_line_by_sub(self, line):
+        sub_str = string.punctuation + string.digits + string.whitespace  # ASCII 标点符号，数字
+        identify = string.maketrans(sub_str, ' '*len(sub_str))
+        clean_line = line.translate(identify)  # 替换ASCII 标点符号
+        return clean_line
 
     def get_clean_lines(self, line):
         identify = string.maketrans('', '')
@@ -93,7 +102,7 @@ class PretreatmentUtil:
 
 
 def get_clean_text(html_file, name):
-    with open(html_file, 'r') as f:
+    with codecs.open(html_file, 'r', "utf-8") as f:
 
         html = f.read()
         soup = BeautifulSoup(html, "lxml")
@@ -113,23 +122,21 @@ def get_clean_text(html_file, name):
         # 先获取html中的所有text，然后去掉空白符，注释，人名
         clean_strings = []
         for string in soup.stripped_strings:
-            clean_string = (re.sub("\xa0+", " ", string, re.S))
-            clean_string = (re.sub("\n+", " ", clean_string, re.S))
+
+            # print string
+
+            # clean_string = (re.sub("<!--.*-->", "", string, flags = re.S))
+            # clean_string = (re.sub("[.-\/:]+", " ", clean_string, flags = re.S))
+
+            # clean_string = (re.sub("\xa0+", " ", clean_string, re.S))
+            clean_string = (re.sub("[^a-zA-Z]", " ", string, re.S))
             clean_string = (re.sub("\s+", " ", clean_string, re.S))
-            clean_string = (re.sub("<!--.*-->", "", clean_string, flags = re.S))
+
+            # print clean_string
             if clean_string:
                 clean_strings.append(clean_string)
 
         text = u" ".join(clean_strings)
-
-        # 去掉text中的注释
-        # text = re.sub("<!--.*-->", "", text, flags = re.S)
-
-        # 去掉空格, html中的&nbsp;&quot;
-        # text = (re.sub("\xa0+", " ", text, re.S))
-        # text = (re.sub("\n+", " ", text, re.S))
-        # text = (re.sub("\s+", " ", text, re.S))
-
         util = PretreatmentUtil()
         return util.get_content(text), util.get_content(name)
 
@@ -148,7 +155,34 @@ def get_clean_title_snippet(file_path):
             text = text + ' ' + title
         if snippet:
             text = text + ' ' + snippet
+
+        text = (re.sub("[^a-zA-Z]", " ", text, re.S))
+        text = (re.sub("\s+", " ", text, re.S))
         util = PretreatmentUtil()
+        title_snippet_dict[rank] = util.get_content(text)
+    file.close()
+    return title_snippet_dict
+
+
+def get_clean_title_snippet_url(file_path):
+    title_snippet_dict = {}
+    file = codecs.open(file_path, "r", "utf-8")
+    for line in file:
+        contents = line.strip('\n').split('\t')
+        rank = int(contents[0])
+        title = contents[1]
+        url = contents[2]
+        snippet = contents[3]
+        text = ''
+        if title:
+            text = text + ' ' + title
+        if snippet:
+            text = text + ' ' + snippet
+        if url:
+            text = text + ' ' + url
+        util = PretreatmentUtil()
+        text = (re.sub("[^a-zA-Z]", " ", text, re.S))
+        text = (re.sub("\s+", " ", text, re.S))
         title_snippet_dict[rank] = util.get_content(text)
     file.close()
     return title_snippet_dict
@@ -179,6 +213,7 @@ def parse_train_html_data(stage_dir):
 
         # print name
 
+
         # 人名
         name_dir = os.path.join(stage_dir, name)
         path_raw = os.path.join(name_dir, "raw")
@@ -192,7 +227,7 @@ def parse_train_html_data(stage_dir):
 
         # 获取真个人名的所有rank的title，url，snippet
         title_url_snippet_file = os.path.join(title_url_snippet_dir, name+".txt")
-        title_snippet_dict = get_clean_title_snippet(title_url_snippet_file)
+        title_snippet_dict = get_clean_title_snippet_url(title_url_snippet_file)
 
         for rank in os.listdir(path_raw):
 
@@ -248,6 +283,9 @@ def parse_test_html_data(stage_dir):
 
     for name in os.listdir(stage_dir):
 
+        # if not name == 'AMANDA_LENTZ':
+        #     continue
+
         # 人名
         name_dir = os.path.join(stage_dir, name)
 
@@ -264,7 +302,7 @@ def parse_test_html_data(stage_dir):
 
         # 获取真个人名的所有rank的title，url，snippet
         test_title_url_snippet_file = os.path.join(test_title_url_snippet_dir, name+".txt")
-        test_title_snippet_dict = get_clean_title_snippet(test_title_url_snippet_file)
+        test_title_snippet_dict = get_clean_title_snippet_url(test_title_url_snippet_file)
 
         for rank in os.listdir(name_dir):
 

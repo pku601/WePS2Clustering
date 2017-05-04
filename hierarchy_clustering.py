@@ -25,7 +25,8 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
     # print disMat.shape
     # print disMat
 
-    # 进行层次聚类:使用min-distance
+    # 进行层次聚类:使用min-distance:
+    # test complete:0.52 average:0.53 single:0.6 centroid:0.47
     Z = sch.linkage(disMat,method='single',metric='cosine')
 
 
@@ -38,8 +39,8 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
     # plt.savefig(os.path.join(cluster_dir, name + '.png'))
 
     # 根据linkage matrix Z得到聚类结果:
-    # 使用 fcluster 方程获取集群信息
-    cluster = sch.fcluster(Z, t=1)       # average:1.15,27   single:1.152
+    # 使用 fcluster 方程获取集群信息 test 1.15:0.68
+    cluster = sch.fcluster(Z, t=1.15)       # average:1.15,27   single:1.152
 
     # 合并rank和cluster, cluster:[rank1, rank2]
     cluster_rank = {}
@@ -67,6 +68,16 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
 
 tfidf_dir = "./training/tfidf"
 test_tfidf_dir = "./test/tfidf"
+
+test_output_dir = './outputDir'
+
+# remove the test output files
+def clean_output_dir(output_dir):
+    if not os.path.exists(output_dir):
+        return
+    for file_name in os.listdir(output_dir):
+        file = os.path.join(output_dir, file_name)
+        os.remove(file)
 
 if __name__ == "__main__":
 
@@ -106,6 +117,8 @@ if __name__ == "__main__":
         is_discard_vec = load_dict['is_discard_vec']
 
         hierarchy_clustering(name.split('.')[0], rank_vec, words_tfidf, is_discard_vec, data_cluster_dir)
+
+    clean_output_dir(test_output_dir)
 
 # python hierarchy_clustering.py train
 

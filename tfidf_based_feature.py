@@ -7,7 +7,7 @@ import numpy as np
 from scipy.linalg.misc import norm
 import sys
 
-train_dir = "./training"
+train_dir = "./training/tokens"
 tfidf_dir = "./training/tfidf"
 
 test_dir = "./test/tokens"

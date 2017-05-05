@@ -102,7 +102,7 @@ class PretreatmentUtil:
 
 
 def get_clean_text(html_file, name):
-    with codecs.open(html_file, 'r', "utf-8") as f:
+    with codecs.open(html_file, 'r') as f:
 
         html = f.read()
         soup = BeautifulSoup(html, "lxml")
@@ -194,7 +194,7 @@ base_dir = "./weps2007_data_1.1/training/web_pages"
 title_url_snippet_dir = "./training/title_url_snippet"
 
 # 定义token的文件夹目录
-token_dir = "./training"
+token_dir = "./training/tokens"
 
 
 # 测试文件夹

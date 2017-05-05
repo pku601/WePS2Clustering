@@ -31,10 +31,13 @@ if [ ! -d "./outputDir" ]; then
   mkdir ./outputDir
 fi
 
-java -cp wepsEvaluation.jar es.nlp.uned.weps.evaluation.SystemScorer ./keysDir/ ./systemsDir/ ./outputDir -ALLMEASURES -AllInOne -OneInOne -Combined -average
+java -cp wepsEvaluation.jar es.nlp.uned.weps.evaluation.SystemScorer ./weps2007_data_1.1/training/truth_files/ ./training/systemsDir/ ./training/outputDir -ALLMEASURES -AllInOne -OneInOne -Combined -average
 
 end=$(date +%s)
 time=$(( $end - $start ))
 printf "Time: %ds\n" $time
+
+
+# java -jar wepsScorer.jar ./weps-2-test/data/test/metadata/ ./weps-2-test/data/test/gold_standard/ ./test/systemsDir/ ./test/outputDir/ -ALLMEASURES -AllInOne -OneInOne -Combined
 
 echo "=============== end   ================="

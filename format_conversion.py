@@ -6,10 +6,10 @@ import sys
 # 格式转换为评测需要的XML格式
 
 cluster_dir = "./training/cluster"
-output_dir = "./systemsDir/TEAM_A"
+output_dir = "./training/systemsDir/TEAM_A"
 
 test_cluster_dir = "./test/cluster"
-test_output_dir = "./systemsDir/TEAMTest"
+test_output_dir = "./test/systemsDir/TEAMTest"
 
 
 def add_doc_node(cur_doc, cur_node, cur_column):  # 添加doc节点

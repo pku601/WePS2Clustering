@@ -42,8 +42,20 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
     # 根据linkage matrix Z得到聚类结果:
     # 使用 fcluster 方程获取集群信息 test discontent (+1)1.15:0.68   (+0)  1.15:0.7
     # 使用 fcluster 方程获取集群信息 test distance () 0.9 0.74
-    cluster = sch.fcluster(Z, t=0.85, criterion='distance')       # average:1.15,27   single:1.152
+    cluster = sch.fcluster(Z, t=0.8, criterion='distance')       # average:1.15,27   single:1.152
 
+    #   test 6
+    #   0,56    0,93    0,77    0,85    0,65    0,75    0,96    0,66    0,45    0,61    0,59  (0.9)
+    #   0,83    0,74    0,74    0,83    0,76    0,84    0,83    0,87    0,49    0,66    0,78  (0.85)
+    #   0,78    0,78    0,77    0,85    0,76    0,84    0,86    0,84    0,5     0,66    0,77  (0.84)
+
+    #   training 4
+    #   0,81    0,77    0,75    0,7     0,84    0,67    0,47    0,71    0,67 (0.92)
+    #   0,84    0,73    0,74    0,7     0,81    0,69    0,46    0,7     0,68 (0.9)
+    #   0,9     0,63    0,7     0,67    0,72    0,71    0,41    0,65    0,65 (0.88)
+    #   0,94    0,56    0,66    0,64    0,65    0,74    0,36    0,6     0,63 (0.86)
+    #   0,95    0,53    0,63    0,63    0,62    0,75    0,34    0,58    0,62 (0.85)
+    #   0,98    0,43    0,54    0,55    0,5     0,76    0,19    0,47    0,55 (0.8)
     # 合并rank和cluster, cluster:[rank1, rank2]
     cluster_rank = {}
     for rank in range(len(rank_vec)):
@@ -71,7 +83,8 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
 tfidf_dir = "./training/tfidf"
 test_tfidf_dir = "./test/tfidf"
 
-test_output_dir = './outputDir'
+output_dir = './training/outputDir'
+test_output_dir = './test/outputDir'
 
 # remove the test output files
 def clean_output_dir(output_dir):
@@ -91,9 +104,11 @@ if __name__ == "__main__":
     if stage == 'train':
         data_tfidf_dir = tfidf_dir
         data_cluster_dir = cluster_dir
+        data_output_dir = output_dir
     else:
         data_tfidf_dir = test_tfidf_dir
         data_cluster_dir = test_cluster_dir
+        data_output_dir = test_output_dir
 
     if not os.path.isdir(data_tfidf_dir):
         print data_tfidf_dir + ' not exist.'
@@ -120,7 +135,7 @@ if __name__ == "__main__":
 
         hierarchy_clustering(name.split('.')[0], rank_vec, words_tfidf, is_discard_vec, data_cluster_dir)
 
-    clean_output_dir(test_output_dir)
+    clean_output_dir(data_output_dir)
 
 # python hierarchy_clustering.py train
 

@@ -6,6 +6,7 @@ import sys
 import scipy.cluster.hierarchy as sch
 import matplotlib.pylab as plt
 import cPickle as pickle
+import numpy as np
 from tfidf_based_feature import get_similarity
 
 cluster_dir = './training/cluster'
@@ -39,8 +40,9 @@ def hierarchy_clustering(name, rank_vec, words_tfidf, is_discard_vec, data_clust
     # plt.savefig(os.path.join(cluster_dir, name + '.png'))
 
     # 根据linkage matrix Z得到聚类结果:
-    # 使用 fcluster 方程获取集群信息 test (+1)1.15:0.68   (+0)  1.15:0.7
-    cluster = sch.fcluster(Z, t=1.15)       # average:1.15,27   single:1.152
+    # 使用 fcluster 方程获取集群信息 test discontent (+1)1.15:0.68   (+0)  1.15:0.7
+    # 使用 fcluster 方程获取集群信息 test distance () 0.9 0.74
+    cluster = sch.fcluster(Z, t=0.9, criterion='distance')       # average:1.15,27   single:1.152
 
     # 合并rank和cluster, cluster:[rank1, rank2]
     cluster_rank = {}
